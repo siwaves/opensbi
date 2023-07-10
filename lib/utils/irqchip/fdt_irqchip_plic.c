@@ -122,6 +122,7 @@ static void thead_plic_plat_init(struct plic_data *pd)
 static const struct fdt_match irqchip_plic_match[] = {
 	{ .compatible = "riscv,plic0" },
 	{ .compatible = "sifive,plic-1.0.0" },
+	{ .compatible = "siliconwaves,w3k-plic" },
 	{ .compatible = "thead,c900-plic",
 	  .data = thead_plic_plat_init },
 	{ },

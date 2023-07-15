@@ -19,3 +19,4 @@ libsbiutils-objs-y += serial/shakti-uart.o
 libsbiutils-objs-y += serial/sifive-uart.o
 libsbiutils-objs-y += serial/litex-uart.o
 libsbiutils-objs-y += serial/uart8250.o
+libsbiutils-objs-y += serial/siliconwaves-uart.o

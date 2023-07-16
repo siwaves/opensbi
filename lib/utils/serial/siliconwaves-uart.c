@@ -85,7 +85,7 @@ static int siliconwaves_uart_getc(void)
 }
 
 static struct sbi_console_device siliconwaves_uart_console = {
-	.name = "siliconwaves_uart",
+	.name = "w3k_uart",
 	.console_putc = siliconwaves_uart_putc,
 	.console_getc = siliconwaves_uart_getc
 };
@@ -94,7 +94,6 @@ int siliconwaves_uart_init(unsigned long base, u32 in_freq, u32 baudrate, u32 re
 		  u32 reg_width, u32 reg_offset)
 {
 	u16 bdiv;
-
 	siliconwaves_uart_base      = (volatile void *)base + reg_offset;
 	siliconwaves_uart_reg_shift = reg_shift;
 	siliconwaves_uart_reg_width = reg_width;
@@ -116,7 +115,7 @@ int siliconwaves_uart_init(unsigned long base, u32 in_freq, u32 baudrate, u32 re
 	}
 
 	/* 8 bits, no parity, one stop bit */
-	set_reg(UART_LCR_OFFSET, 0x00);
+	set_reg(UART_LCR_OFFSET, 0x03);
 	/* Enable FIFO */
 	set_reg(UART_FCR_OFFSET, 0x01);
 	/* No modem control DTR RTS */

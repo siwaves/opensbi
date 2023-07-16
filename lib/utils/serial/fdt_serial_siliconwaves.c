@@ -17,7 +17,7 @@ static int serial_siliconwaves_uart_init(void *fdt, int nodeoff,
 	int rc;
 	struct platform_uart_data uart;
 
-	rc = fdt_parse_siliconwaves_uart_node(fdt, nodeoff, &uart);
+	rc = fdt_parse_uart8250_node(fdt, nodeoff, &uart);
 	if (rc)
 		return rc;
 
@@ -30,7 +30,7 @@ static const struct fdt_match serial_siliconwaves_uart_match[] = {
 	{ },
 };
 
-struct fdt_serial fdt_serial_siliconwaves_uart = {
+struct fdt_serial fdt_serial_siliconwaves = {
 	.match_table = serial_siliconwaves_uart_match,
 	.init = serial_siliconwaves_uart_init,
 };

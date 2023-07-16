@@ -14,6 +14,7 @@
 #include <sbi_utils/serial/fdt_serial.h>
 
 extern struct fdt_serial fdt_serial_uart8250;
+extern struct fdt_serial fdt_serial_siliconwaves;
 extern struct fdt_serial fdt_serial_sifive;
 extern struct fdt_serial fdt_serial_litex;
 extern struct fdt_serial fdt_serial_htif;
@@ -23,6 +24,7 @@ extern struct fdt_serial fdt_serial_gaisler;
 static struct fdt_serial *serial_drivers[] = {
 	&fdt_serial_uart8250,
 	&fdt_serial_sifive,
+	&fdt_serial_siliconwaves,
 	&fdt_serial_litex,
 	&fdt_serial_htif,
 	&fdt_serial_shakti,

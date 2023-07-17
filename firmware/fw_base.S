@@ -52,7 +52,7 @@ _start:
 	call	fw_boot_hart
 	add	a6, a0, zero
 	MOV_3R	a0, s0, a1, s1, a2, s2
-	li	a7, 0
+	li	a7, -1
 	beq	a6, a7, _try_lottery
 	/* Jump to relocation wait loop if we are not boot hart */
 	bne	a0, a6, _wait_relocate_copy_done

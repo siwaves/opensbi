@@ -108,8 +108,18 @@ static void sbi_boot_print_general(struct sbi_scratch *scratch)
 	sbi_printf("Runtime SBI Version       : %d.%d\n",
 		   sbi_ecall_version_major(), sbi_ecall_version_minor());
 	sbi_printf("\n");
-}
 
+	sbi_printf("CSR_PMPADDR%d: 0x%lx\n", 0, csr_read(CSR_PMPADDR0));
+	sbi_printf("CSR_PMPADDR%d: 0x%lx\n", 1, csr_read(CSR_PMPADDR1));
+	sbi_printf("CSR_PMPADDR%d: 0x%lx\n", 2, csr_read(CSR_PMPADDR2));
+	sbi_printf("CSR_PMPADDR%d: 0x%lx\n", 3, csr_read(CSR_PMPADDR3));
+	sbi_printf("CSR_PMPADDR%d: 0x%lx\n", 4, csr_read(CSR_PMPADDR4));
+	sbi_printf("CSR_PMPADDR%d: 0x%lx\n", 5, csr_read(CSR_PMPADDR5));
+	sbi_printf("CSR_PMPADDR%d: 0x%lx\n", 6, csr_read(CSR_PMPADDR6));
+	sbi_printf("CSR_PMPADDR%d: 0x%lx\n", 7, csr_read(CSR_PMPADDR7));
+
+	sbi_printf("CSR_PMPCFG%d: 0x%lx\n", 0, csr_read(CSR_PMPCFG0));
+}
 static void sbi_boot_print_domains(struct sbi_scratch *scratch)
 {
 	if (scratch->options & SBI_SCRATCH_NO_BOOT_PRINTS)
@@ -161,7 +171,7 @@ static unsigned long coldboot_done;
 static void wait_for_coldboot(struct sbi_scratch *scratch, u32 hartid)
 {
 	unsigned long saved_mie, cmip;
-
+	sbi_printf("hartid %u, wait wake\n", hartid);
 	/* Save MIE CSR */
 	saved_mie = csr_read(CSR_MIE);
 
@@ -227,7 +237,19 @@ static void wake_coldboot_harts(struct sbi_scratch *scratch, u32 hartid)
 }
 
 static unsigned long init_count_offset;
+static inline void w_pmpaddr0(unsigned long x)
+{
+    asm volatile("csrw pmpaddr0, %0"
+                 :
+                 : "r"(x));
+}
 
+static inline void w_pmpcfg0(unsigned long x)
+{
+    asm volatile("csrw pmpcfg0, %0"
+                 :
+                 : "r"(x));
+}
 static void __noreturn init_coldboot(struct sbi_scratch *scratch, u32 hartid)
 {
 	int rc;
@@ -313,7 +335,7 @@ static void __noreturn init_coldboot(struct sbi_scratch *scratch, u32 hartid)
 			   __func__, rc);
 		sbi_hart_hang();
 	}
-
+#if 0
 	rc = sbi_hart_pmp_configure(scratch);
 	if (rc) {
 		sbi_printf("%s: PMP configure failed (error %d)\n",
@@ -331,15 +353,18 @@ static void __noreturn init_coldboot(struct sbi_scratch *scratch, u32 hartid)
 			   __func__, rc);
 		sbi_hart_hang();
 	}
-
+#else
+	w_pmpaddr0(0x3fffffffffffffull);
+	w_pmpcfg0(0xf);
+#endif
 	sbi_boot_print_general(scratch);
 
 	sbi_boot_print_domains(scratch);
 
 	sbi_boot_print_hart(scratch, hartid);
-
+#if 1
 	wake_coldboot_harts(scratch, hartid);
-
+#endif
 	init_count = sbi_scratch_offset_ptr(scratch, init_count_offset);
 	(*init_count)++;
 

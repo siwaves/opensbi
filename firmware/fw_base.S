@@ -47,12 +47,19 @@
 	.globl _start
 	.globl _start_warm
 _start:
+#if 0
+	li  t0, 0x02011000
+	lw  t1, 0(t0)
+	li  t2, 0xfffffffc
+	and t1, t1, t2
+	sw  t1, 0(t0)
+#endif
 	/* Find preferred boot HART id */
 	MOV_3R	s0, a0, s1, a1, s2, a2
 	call	fw_boot_hart
 	add	a6, a0, zero
 	MOV_3R	a0, s0, a1, s1, a2, s2
-	li	a7, -1
+	li	a7, 0
 	beq	a6, a7, _try_lottery
 	/* Jump to relocation wait loop if we are not boot hart */
 	bne	a0, a6, _wait_relocate_copy_done
